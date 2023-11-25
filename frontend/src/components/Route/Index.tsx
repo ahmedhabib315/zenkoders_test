@@ -25,12 +25,12 @@ const Routers = () => {
           <Routes>
             <Route element={<PrivateRoutes />} >
               <Route path={`/news`} element={<><Nav loggedin={autheticated} /><NewsPage /></>} />
-              <Route path={`/payment`} element={<><Nav loggedin={autheticated} /><Payment /></>} />
+              <Route path={`/payment`} element={<><Payment /></>} />
             </Route>
 
-            <Route path={`/`} element={<><Nav loggedin={autheticated} /><h1>Home Page</h1></>} />
-            <Route path={`/login`} element={<><Nav loggedin={autheticated} /><Login /></>} />
-            <Route path={`/signup`} element={<><Nav loggedin={autheticated} /><Signup /></>} />
+            <Route path={`/`} element={<><h1>Home Page</h1></>} />
+            <Route path={`/login`} element={<><Login /></>} />
+            <Route path={`/signup`} element={<><Signup /></>} />
           </Routes>
         </Suspense>
       </>
