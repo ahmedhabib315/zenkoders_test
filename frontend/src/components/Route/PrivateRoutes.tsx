@@ -1,13 +1,12 @@
 import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 
 const PrivateRoutes = () => {
-  const navigate = useNavigate()
-  const authenticated = localStorage.getItem('authenticated')
+  const authenticated = localStorage.getItem('auth')
 
-  if (authenticated === 'false' || authenticated === null) {
-    return <Navigate to="/login" />
+  if (authenticated && JSON.parse(authenticated).hash) {
+    return <>{<Outlet />}</>
   }
-  return <>{<Outlet />}</>
+  return <Navigate to="/login" />
 }
 
 export default PrivateRoutes
