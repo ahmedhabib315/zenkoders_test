@@ -4,24 +4,27 @@ import {
   useStripe
 } from '@stripe/react-stripe-js';
 import { Button } from '@mui/material';
+import React from 'react';
+import { Stripe, StripeElements } from '@stripe/stripe-js';
 
 
 const CheckoutForm = ({ formData }: any) => {
-  const stripe: any = useStripe();
-  const elements: any = useElements();
+  const stripe: Stripe | null = useStripe();
+  const elements: StripeElements | null = useElements();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(':::::hello:::::::');
 
-    const cart = elements.getElement(CardElement);
-
-    const { error, token } = await stripe.createToken(cart);
-
-    if (error) {
-      console.log(':::::error:::::::', error);
-    } else {
-      console.log(':::::::::token:::::::', token)
+    if (elements) {
+      const cart = elements.getElement(CardElement);
+      if (stripe && cart) {
+        const { error, token } = await stripe.createToken(cart);
+        if (error) {
+          console.log(':::::error:::::::', error);
+        } else {
+          console.log(':::::::::token:::::::', token)
+        }
+      }
     }
   };
 
@@ -41,4 +44,4 @@ const CheckoutForm = ({ formData }: any) => {
   );
 };
 
-export default CheckoutForm;
+export default React.memo(CheckoutForm);

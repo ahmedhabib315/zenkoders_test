@@ -1,47 +1,45 @@
-import React from 'react'
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import React, { useEffect, useState } from 'react';
+import { formatDistance } from 'date-fns';
 
-function Headline() {
+const Headline = () => {
+  const [headlinesNews, setheadlinesNews] = useState([]);
+
+  useEffect(() => {
+    const headlines = localStorage.getItem('headlines');
+    if (headlines && JSON.parse(headlines).news && JSON.parse(headlines).news.articles.length > 0) {
+      setheadlinesNews(JSON.parse(headlines).news.articles.slice(0, 5));
+    }
+  }, []);
+
   return (
-    <>
-      <div>
-        <div>
-          #1
-        </div>
-        <div>
-          <p>Title1</p>
-          <p>Time1</p>
-        </div>
-      </div>
-      <div>
-        <div>
-          #2
-        </div>
-        <div>
-          <p>Title2</p>
-          <p>Time2</p>
-        </div>
-      </div>
-      <div>
-        <div>
-          #3
-        </div>
-        <div>
-          <p>Title3</p>
-          <p>Time3</p>
-        </div>
-      </div>
-      <div>
-        <div>
-          #4
-        </div>
-        <div>
-          <p>Title4</p>
-          <p>Time4</p>
-        </div>
-      </div>
-    </>
-
+    <List
+      sx={{
+        width: '100%',
+        maxWidth: 360,
+        bgcolor: 'background.paper',
+      }}
+    >
+      {
+        headlinesNews.map((el: any, index: number) => {
+          return (<><ListItem>
+            <ListItemAvatar>
+              <Avatar>
+                <Avatar alt={el.title} src={el.urlToImage} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={el.title} secondary={formatDistance(new Date(), new Date(el.publishedAt))} />
+          </ListItem>
+            <Divider variant="inset" component="li" /></>)
+        })
+      }
+    </List>
   )
 }
 
-export default Headline
+export default React.memo(Headline)

@@ -13,8 +13,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { login } from '../../../actions/auth';
 import { Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { ApiResponse } from '../../../constants/interfaces';
 
-function Login() {
+const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,16 +31,16 @@ function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const payload = {
+    const payload: any = {
       email: data.get('email'),
       password: data.get('password'),
     }
     setdisabled(true);
 
-    const res: any = await login(payload);
+    const res: ApiResponse | undefined = await login(payload);
 
     setstatus(res);
-    if (res.code == 200) {
+    if (res && res.code === 200) {
       localStorage.setItem('auth', JSON.stringify(res.data));
       navigate('/payment');
     }
@@ -102,7 +103,7 @@ function Login() {
                 id="password"
                 autoComplete="current-password"
               />
-              {status.code && status.code != 200 &&
+              {status.code && status.code !== 200 &&
                 (<Alert variant="filled" severity="error">
                   {status.msg}
                 </Alert>)}
@@ -122,7 +123,7 @@ function Login() {
                 </Grid>
                 <Grid item>
                   <Link href="/signup" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                    Don't have an account? Sign Up
                   </Link>
                 </Grid>
               </Grid>

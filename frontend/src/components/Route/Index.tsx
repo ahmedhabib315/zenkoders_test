@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import { Suspense } from 'react'
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
 import PrivateRoutes from './PrivateRoutes'
@@ -12,19 +11,17 @@ import NewsPage from '../Pages/News/NewsPage'
 const Routers = () => {
   return (
     <BrowserRouter basename="/">
-      <>
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            <Route element={<PrivateRoutes />} >
-              <Route path={`/news`} element={<><Nav /><NewsPage /></>} />
-              <Route path={`/payment`} element={<><Payment /></>} />
-            </Route>
-            <Route path={`/`} element={<><Navigate to="/login" /></>} />
-            <Route path={`/login`} element={<><Login /></>} />
-            <Route path={`/signup`} element={<><Signup /></>} />
-          </Routes>
-        </Suspense>
-      </>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route element={<PrivateRoutes />} >
+            <Route path={`/news/*`} element={<><Nav /><NewsPage /></>} />
+            <Route path={`/payment`} element={<><Payment /></>} />
+          </Route>
+          <Route path={`/`} element={<><Navigate to="/login" /></>} />
+          <Route path={`/login`} element={<><Login /></>} />
+          <Route path={`/signup`} element={<><Signup /></>} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }

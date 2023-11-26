@@ -13,10 +13,12 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { signup } from '../../../actions/auth';
 import { Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { message } from '../../../constants/constants';
+import { ApiResponse } from '../../../constants/interfaces';
 
-// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme();
 
-function Signup() {
+const Signup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,27 +27,25 @@ function Signup() {
       navigate('/payment');
     }
   }, []);
-  const defaultTheme = createTheme();
 
   const [status, setstatus]: any = useState({});
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const payload = {
+    const payload: any = {
       email: data.get('email'),
       password: data.get('password'),
       rePassword: data.get('rePassword'),
       name: data.get('name'),
     }
 
-    console.log(':::payload::::::::', payload);
-    if (payload.password != payload.rePassword) {
-      setstatus({ msg: 'Password must be same', code: 500 })
+    if (payload.password === payload.rePassword) {
+      setstatus({ msg: message.same_password, code: 500 })
     }
     else {
-      const res: any = await signup(payload);
+      const res: ApiResponse | undefined = await signup(payload);
       setstatus(res);
-      if (res.code == 200) {
+      if (res && res.code === 200) {
         setTimeout(() => {
           navigate('/login')
         }, 3000);
@@ -115,7 +115,7 @@ function Signup() {
                 autoComplete="confirm-password"
               />
 
-              {status.code ? status.code != 200 ?
+              {status.code ? status.code !== 200 ?
                 (<Alert variant="filled" severity="error">
                   {status.msg}
                 </Alert>) : (<Alert variant="filled" severity="success">
@@ -136,7 +136,7 @@ function Signup() {
                 </Grid>
                 <Grid item>
                   <Link href="/login" variant="body2">
-                    {"Already have an account? Sign in"}
+                    Already have an account? Sign in
                   </Link>
                 </Grid>
               </Grid>

@@ -1,11 +1,11 @@
 import axios from 'axios';
+import { message } from '../constants/constants';
+import { Login, Signup } from '../constants/interfaces';
 
-
-export async function login(payload: any) {
-  return await axios.post('http://localhost:3001/api/v1/user/signin', {
+export async function login(payload: Login) {
+  return await axios.post(`${process.env.REACT_APP_API_URL}/user/signin`, {
     email: payload.email,
     password: payload.password,
-    name: payload.name,
   })
     .then(function (response) {
       if (response.data.data) {
@@ -14,31 +14,31 @@ export async function login(payload: any) {
     })
     .catch(function (error) {
       if (!error.response) {
-        return { msg: 'Some Error Occurred. Please try again Later', code: 500 }
+        return { msg: message.error_occurred, code: 500 }
       }
       else {
         if (Array.isArray(error.response.data.data)) {
-          return { msg: 'Incorrect Credentials', code: 403 }
+          return { msg: message.incorrect_credentials, code: 403 }
         }
-        return { msg: 'Incorrect Credentials', code: 403 }
+        return { msg: message.incorrect_credentials, code: 403 }
       }
     });
 }
 
-export async function signup(payload: any) {
-  return await axios.post('http://localhost:3001/api/v1/user/signup', {
+export async function signup(payload: Signup) {
+  return await axios.post(`${process.env.REACT_APP_API_URL}/user/signup`, {
     email: payload.email,
     password: payload.password,
     name: payload.name,
   })
     .then(function (response) {
       if (response.data.data) {
-        return { msg: 'Your account has been created successfully. Please login to continue', code: 200 };
+        return { msg: message.created_successfully, code: 200 };
       }
     })
     .catch(function (error) {
       if (!error.response) {
-        return { msg: 'Some Error Occurred. Please try again Later', code: 500 }
+        return { msg: message.error_occurred, code: 500 }
       }
       else {
         if (Array.isArray(error.response.data.data)) {

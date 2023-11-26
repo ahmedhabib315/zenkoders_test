@@ -53,11 +53,13 @@ const tiers = [
 
 const defaultTheme = createTheme();
 
-function Payment() {
+const Payment = () => {
   const [open, setOpen] = useState(false);
+  const [choosenPackage, setchoosenPackage] = useState({});
   const handleClose = () => setOpen(false);
 
-  const handleOnClick = () => {
+  const handleOnClick = (el: any) => {
+    setchoosenPackage(tiers[el.target.id]);
     setOpen(true);
   }
 
@@ -85,7 +87,7 @@ function Payment() {
         {/* End hero unit */}
         <Container maxWidth="md" component="main">
           <Grid container spacing={5} alignItems="flex-end">
-            {tiers.map((tier) => (
+            {tiers.map((tier, index: number) => (
               // Enterprise card is full width at sm breakpoint
               <Grid
                 item
@@ -142,6 +144,7 @@ function Payment() {
                   <CardActions>
                     <Button
                       fullWidth
+                      id={index.toString()}
                       variant='contained'
                       onClick={handleOnClick}
                     >
@@ -155,14 +158,9 @@ function Payment() {
         </Container>
       </ThemeProvider>
 
-      <PaymentModal open={open} handleClose={handleClose} />
-
-
-      {/* <Elements stripe={stripePromise} options={options}>
-        <CheckoutForm />
-      </Elements> */}
+      <PaymentModal open={open} handleClose={handleClose} package={choosenPackage} />
     </>
   );
 }
 
-export default Payment
+export default React.memo(Payment)
