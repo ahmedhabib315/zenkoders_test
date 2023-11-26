@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id            Int           @id @default(autoincrement())
+  name          String
+  email         String        @unique
+  password      String        @default("")
+  hash          String        @default(uuid())
+  refresh_token String?
+  user_details  UserDetails[]
+  payments      Payments[]
+
+  @@index([id, email])
+  @@map("users")
+}
+
+model UserDetails {
+  id              Int      @id @default(autoincrement())
+  user            Users    @relation(fields: [user_id], references: [id])
+  user_id         Int
+  object          String?
+  brand           String?
+  last4           String?
+  exp_month       String?
+  exp_year        String?
+  customer_id     String
+  subscription_id String?
+  price_id        String?
+  product_id      String?
+  card_id         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+
+  @@index([user_id])
+  @@map("user_details")
+}
+
+model Payments {
+  id             Int      @id @default(autoincrement())
+  user           Users    @relation(fields: [user_id], references: [id])
+  user_id        Int
+  renewal_period String
+  month_count    Int
+  status         Boolean
+  start_at       String
+  end_at         String
+  invoice_id     String
+  amount         Int
+  currency       String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  @@index([id, user_id])
+  @@map("payments")
+}
+
+model Packages {
+  id           Int      @id @default(autoincrement())
+  package_name String
+  package_desc String   @default("")
+  product_id   String   @unique()
+  price_id     String   @unique()
+  amount       Int
+  duration     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+
+  @@index([id, package_name])
+  @@map("packages")
+}
