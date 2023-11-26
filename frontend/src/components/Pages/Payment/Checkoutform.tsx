@@ -12,6 +12,7 @@ const CheckoutForm = ({ formData }: any) => {
   const stripe: Stripe | null = useStripe();
   const elements: StripeElements | null = useElements();
 
+  //Handle Submit for Stripe Payment
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 

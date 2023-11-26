@@ -55,11 +55,12 @@ const defaultTheme = createTheme();
 
 const Payment = () => {
   const [open, setOpen] = useState(false);
-  const [choosenPackage, setchoosenPackage] = useState({});
+  const [chosenPackage, setchosenPackage] = useState({});
   const handleClose = () => setOpen(false);
 
+  //Set Chosen Package detail in variable for Payment Modal and open Payment Modal
   const handleOnClick = (el: any) => {
-    setchoosenPackage(tiers[el.target.id]);
+    setchosenPackage(tiers[el.target.id]);
     setOpen(true);
   }
 
@@ -158,7 +159,7 @@ const Payment = () => {
         </Container>
       </ThemeProvider>
 
-      <PaymentModal open={open} handleClose={handleClose} package={choosenPackage} />
+      <PaymentModal open={open} handleClose={handleClose} package={chosenPackage} />
     </>
   );
 }

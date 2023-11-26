@@ -2,6 +2,13 @@ import axios from 'axios';
 import { message } from '../constants/constants';
 import { Login, Signup } from '../constants/interfaces';
 
+/**
+ * 
+ * Send Login Request and handle Response
+ * 
+ * @param payload 
+ * @returns 
+ */
 export async function login(payload: Login) {
   return await axios.post(`${process.env.REACT_APP_API_URL}/user/signin`, {
     email: payload.email,
@@ -25,6 +32,13 @@ export async function login(payload: Login) {
     });
 }
 
+/**
+ * 
+ * Send Signup Request and handle Response
+ * 
+ * @param payload 
+ * @returns 
+ */
 export async function signup(payload: Signup) {
   return await axios.post(`${process.env.REACT_APP_API_URL}/user/signup`, {
     email: payload.email,

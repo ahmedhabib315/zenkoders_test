@@ -13,10 +13,7 @@ import { paymentModalStyle } from '../../../constants/constants';
 import { PaymentModalProps } from '../../../constants/interfaces';
 
 const PaymentModal = (props: PaymentModalProps) => {
-  // const stripe: any = useStripe();
   const formData = props.package;
-
-  // const elements: any = useElements();
   const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`);
 
   const options: any = {

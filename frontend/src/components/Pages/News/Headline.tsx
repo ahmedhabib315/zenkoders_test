@@ -10,6 +10,7 @@ import { formatDistance } from 'date-fns';
 const Headline = () => {
   const [headlinesNews, setheadlinesNews] = useState([]);
 
+  //Get headline data on load
   useEffect(() => {
     const headlines = localStorage.getItem('headlines');
     if (headlines && JSON.parse(headlines).news && JSON.parse(headlines).news.articles.length > 0) {

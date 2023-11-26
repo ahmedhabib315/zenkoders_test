@@ -5,7 +5,7 @@ export const message = {
   same_password: 'Password must be same'
 }
 
-export const sections: string[] = ['Business', 'Entertainment', 'General', 'Health', 'Science', 'Sports', 'Technology'];
+export const sections: string[] = ['Home', 'Business', 'Entertainment', 'General', 'Health', 'Science', 'Sports', 'Technology'];
 
 export const newsDetailStyle = {
   position: 'absolute' as 'absolute',

@@ -20,7 +20,10 @@ const defaultTheme = createTheme();
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [disabled, setdisabled] = useState(false);
+  const [status, setstatus]: any = useState({});
 
+  // Check if already logged in then redirect to Payment Page
   useEffect(() => {
     const authenticated = localStorage.getItem('auth');
     if (authenticated && JSON.parse(authenticated).hash) {
@@ -28,9 +31,10 @@ const Signup = () => {
     }
   }, []);
 
-  const [status, setstatus]: any = useState({});
+  // Handle Submit for Sign up Form
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Get data from form to send request to server
     const data = new FormData(event.currentTarget);
     const payload: any = {
       email: data.get('email'),
@@ -38,11 +42,13 @@ const Signup = () => {
       rePassword: data.get('rePassword'),
       name: data.get('name'),
     }
-
-    if (payload.password === payload.rePassword) {
+    setdisabled(true);
+    //Check if Passwords are same
+    if (payload.password !== payload.rePassword) {
       setstatus({ msg: message.same_password, code: 500 })
     }
     else {
+      //Get response from server and redirect show message to user accordingly
       const res: ApiResponse | undefined = await signup(payload);
       setstatus(res);
       if (res && res.code === 200) {
@@ -51,11 +57,13 @@ const Signup = () => {
         }, 3000);
       }
     }
+    setdisabled(false);
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
+        {/* Sign Up Form Component Start */}
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
@@ -124,6 +132,7 @@ const Signup = () => {
               <Button
                 type="submit"
                 fullWidth
+                disabled={disabled}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
@@ -143,7 +152,9 @@ const Signup = () => {
             </Box>
           </Box>
         </Grid>
+        {/* Sign Up Form Component End */}
         <CssBaseline />
+        {/* Image Component Start */}
         <Grid
           item
           xs={false}
@@ -158,7 +169,7 @@ const Signup = () => {
             backgroundPosition: 'center',
           }}
         />
-
+        {/* Image Component End */}
       </Grid>
     </ThemeProvider>
   );

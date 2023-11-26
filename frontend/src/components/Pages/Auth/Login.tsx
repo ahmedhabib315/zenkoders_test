@@ -15,9 +15,14 @@ import { Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ApiResponse } from '../../../constants/interfaces';
 
+const defaultTheme = createTheme();
+
 const Login = () => {
   const navigate = useNavigate();
+  const [status, setstatus]: any = useState({});
+  const [disabled, setdisabled] = useState(false);
 
+  // Check if already logged in then redirect to Payment Page
   useEffect(() => {
     const authenticated = localStorage.getItem('auth');
     if (authenticated && JSON.parse(authenticated).hash) {
@@ -25,20 +30,21 @@ const Login = () => {
     }
   }, []);
 
-  const defaultTheme = createTheme();
-  const [status, setstatus]: any = useState({});
-  const [disabled, setdisabled] = useState(false);
+  // Handle Submit for Login Form
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Get data from form to send request to server
     const data = new FormData(event.currentTarget);
     const payload: any = {
       email: data.get('email'),
       password: data.get('password'),
     }
+    // Disable Login Button after Submit
     setdisabled(true);
 
     const res: ApiResponse | undefined = await login(payload);
 
+    // Get response code and redirect to payment page after successful login else set Error Message
     setstatus(res);
     if (res && res.code === 200) {
       localStorage.setItem('auth', JSON.stringify(res.data));
@@ -51,6 +57,7 @@ const Login = () => {
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
+        {/* Image Component Start */}
         <Grid
           item
           xs={false}
@@ -65,6 +72,8 @@ const Login = () => {
             backgroundPosition: 'center',
           }}
         />
+        {/* Image Component End */}
+        {/* Login Form Component Start */}
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
@@ -130,6 +139,7 @@ const Login = () => {
             </Box>
           </Box>
         </Grid>
+        {/* Login Form Component End */}
       </Grid>
     </ThemeProvider>
   );

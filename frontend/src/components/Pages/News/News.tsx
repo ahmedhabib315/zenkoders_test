@@ -8,7 +8,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { formatDistance } from 'date-fns';
 import '../../../assets/style/pages.css';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const News = () => {
   const [open, setOpen] = useState(false);
@@ -16,7 +16,9 @@ const News = () => {
   const [newsData, setnewsData] = useState([]);
   const [currentNews, setcurrentNews] = useState({});
   const abc = useParams();
+  const location = useLocation();
 
+  // Set new Detail in currentNews and open the modal for news Detail
   const handleOpen = (el: any) => {
     const id = el.target.id;
     setcurrentNews(newsData[id]);
@@ -24,10 +26,21 @@ const News = () => {
   };
 
 
+  //Get news data on load
   useEffect(() => {
     const data: string | null = localStorage.getItem('news');
+
+    // Parse the query parameters from the location.search string
+    const queryParams = new URLSearchParams(location.search);
+
+    // Get the value of a specific query parameter (e.g., 'query')
+    const queryValue = queryParams.get('q');
+
     if (abc['*']) {
       console.log(':::::::abc::::;', abc);
+    }
+    if (queryValue) {
+      console.log(':::::::queryValue::;', queryValue);
     }
     if (data && JSON.parse(data).status === 'ok') {
       setnewsData(JSON.parse(data).articles)

@@ -1,10 +1,11 @@
 import { Button, Toolbar, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled, alpha } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import { sections } from '../../constants/constants';
+import { useNavigate } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -49,10 +50,22 @@ const StyledInputBase = styled(InputBase)(({ theme }: any) => ({
 }));
 
 const Nav = () => {
+  const [searchValue, setsearchValue]: any = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    console.log(':::::asd:::::;');
+  //Get Values in Search Text
+  const handleOnChange = (ev: any) => {
+    setsearchValue(ev.target.value);
   }
+
+  //Set Text Search in URl for News Search
+  const handleOnClick = (ev: any) => {
+    if (searchValue) {
+      navigate(`/news?q=${searchValue}`)
+    }
+  }
+
+
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -73,8 +86,12 @@ const Nav = () => {
           <StyledInputBase
             placeholder="Search…"
             inputProps={{ 'aria-label': 'search' }}
+            onChange={handleOnChange}
           />
         </Search>
+        <Button disabled={searchValue ? false : true} variant="outlined" size="small" onClick={handleOnClick}>
+          Search
+        </Button>
       </Toolbar>
       <Toolbar
         component="nav"
@@ -87,7 +104,7 @@ const Nav = () => {
             noWrap
             key={section}
             variant="body2"
-            href={section.toLowerCase()}
+            href={`/news/${section != 'Home' ? section.toLowerCase() : ''}`}
             sx={{ p: 1, flexShrink: 0 }}
           >
             {section}
