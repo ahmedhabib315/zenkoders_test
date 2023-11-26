@@ -127,11 +127,11 @@ const Login = () => {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/" variant="body2">
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="/signup" variant="body2">
+                  <Link onClick={()=> navigate('/signup')} style={{cursor: 'pointer'}} variant="body2">
                     Don't have an account? Sign Up
                   </Link>
                 </Grid>

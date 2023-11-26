@@ -13,8 +13,11 @@ const Headline = () => {
   //Get headline data on load
   useEffect(() => {
     const headlines = localStorage.getItem('headlines');
-    if (headlines && JSON.parse(headlines).news && JSON.parse(headlines).news.articles.length > 0) {
+    if (headlines && JSON.parse(headlines).expiry) {
       setheadlinesNews(JSON.parse(headlines).news.articles.slice(0, 5));
+    }
+    else{
+
     }
   }, []);
 

@@ -87,7 +87,7 @@ const Signup = () => {
                 required
                 fullWidth
                 id="name"
-                label="First Name"
+                label="Full Name"
                 autoFocus
                 margin="normal"
               />
@@ -140,11 +140,11 @@ const Signup = () => {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/" variant="body2">
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="/login" variant="body2">
+                  <Link onClick={()=> navigate('/login')} style={{cursor: 'pointer'}} variant="body2">
                     Already have an account? Sign in
                   </Link>
                 </Grid>

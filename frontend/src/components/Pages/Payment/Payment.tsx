@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import Container from '@mui/material/Container';
 import PaymentModal from './PaymentModal';
+import { useNavigate } from 'react-router-dom';
 
 const tiers = [
   {
@@ -54,9 +55,17 @@ const tiers = [
 const defaultTheme = createTheme();
 
 const Payment = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [chosenPackage, setchosenPackage] = useState({});
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    const subscribedCustomer = localStorage.getItem('auth');
+    if (subscribedCustomer && JSON.parse(subscribedCustomer).subscribed) {
+      navigate('/news');
+    }
+  }, []);
 
   //Set Chosen Package detail in variable for Payment Modal and open Payment Modal
   const handleOnClick = (el: any) => {
@@ -79,7 +88,7 @@ const Payment = () => {
             color="text.primary"
             gutterBottom
           >
-            Package
+            Packages
           </Typography>
           <Typography variant="h5" align="center" color="text.secondary" component="p">
             Get subscribed to the number #1 News Application in the world and Stay tuned with all the latest News.

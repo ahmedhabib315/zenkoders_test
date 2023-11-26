@@ -1,5 +1,5 @@
 import { Button, Toolbar, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled, alpha } from '@mui/material/styles';
@@ -52,16 +52,24 @@ const StyledInputBase = styled(InputBase)(({ theme }: any) => ({
 const Nav = () => {
   const [searchValue, setsearchValue]: any = useState('');
   const navigate = useNavigate();
+  const inputRef = useRef(null);
 
   //Get Values in Search Text
   const handleOnChange = (ev: any) => {
     setsearchValue(ev.target.value);
   }
 
-  //Set Text Search in URl for News Search
-  const handleOnClick = (ev: any) => {
+  //Set Text Search in URl for News Search and empty Text Field
+  const handleOnClick = () => {
     if (searchValue) {
       navigate(`/news?q=${searchValue}`)
+      setsearchValue('')
+      if (inputRef.current) {
+        let element: any = inputRef.current;
+        if (element.querySelector('input')) {
+          element.querySelector('input').value = '';
+        }
+      }
     }
   }
 
@@ -86,6 +94,7 @@ const Nav = () => {
           <StyledInputBase
             placeholder="Search…"
             inputProps={{ 'aria-label': 'search' }}
+            ref={inputRef}
             onChange={handleOnChange}
           />
         </Search>
@@ -103,8 +112,9 @@ const Nav = () => {
             color="inherit"
             noWrap
             key={section}
+            style={{ cursor: 'pointer' }}
             variant="body2"
-            href={`/news/${section != 'Home' ? section.toLowerCase() : ''}`}
+            onClick={() => navigate(`/news/${section != 'Home' ? section.toLowerCase() : ''}`)}
             sx={{ p: 1, flexShrink: 0 }}
           >
             {section}

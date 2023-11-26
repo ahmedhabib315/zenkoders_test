@@ -15,10 +15,10 @@ import { PaymentModalProps } from '../../../constants/interfaces';
 const PaymentModal = (props: PaymentModalProps) => {
   const formData = props.package;
   const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`);
-
+  
   const options: any = {
     mode: 'payment',
-    amount: 1099,
+    amount: parseFloat(formData.price),
     currency: 'usd'
   };
 

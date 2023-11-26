@@ -14,7 +14,7 @@ const Routers = () => {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route element={<PrivateRoutes />} >
-            <Route path={`/news/*`} element={<><Nav /><NewsPage /></>} />
+            <Route path={`/news/*`} element={<><NewsPage /></>} />
             <Route path={`/payment`} element={<><Payment /></>} />
           </Route>
           <Route path={`/`} element={<><Navigate to="/login" /></>} />

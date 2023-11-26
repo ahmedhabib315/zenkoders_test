@@ -2,4 +2,22 @@
   max-height: 100vh;
   overflow-x: hidden;
   overflow-y: scroll;
+  width: 65%
+}
+
+#root > div > div > main > div > div:nth-child(2){
+  display: none;
+}
+
+#root > div > div > main > div{
+  justify-content: space-between;
+  margin-left: 0px !important;
+}
+
+#root > div > div > main > div > div.news > div:nth-child(n){
+  max-width: 100% !important
+}
+
+#root > div > div > main > div > div.news > div:nth-child(n) > div.MuiCardMedia-root.css-1999db7-MuiCardMedia-root{
+  height: 250px
 }
