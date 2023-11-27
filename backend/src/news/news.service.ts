@@ -6,6 +6,13 @@ import { News } from './dto/news.dto';
 export class NewsService {
   constructor() {}
 
+  /**
+   * 
+   * This method Gets and sends the news from new api to client
+   * 
+   * @param data 
+   * @returns 
+   */
   async getNews(data: News) {
     try {
       const date = format(sub(new Date(), { days: 6 }), 'yyyy-MM-dd');
@@ -39,6 +46,12 @@ export class NewsService {
     }
   }
 
+  /**
+   * 
+   * This method gets and sends headlines from new api to client
+   * 
+   * @returns 
+   */
   async getHeadlines() {
     try {
       const response = await fetch(
