@@ -13,7 +13,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { login } from '../../../actions/auth';
 import { Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { ApiResponse } from '../../../constants/interfaces';
+import { ApiResponse } from '../../../helpers/interfaces';
+import { getValueFromLocalStorage, setValueInLocalStorage } from '../../../helpers/common-functions';
 
 const defaultTheme = createTheme();
 
@@ -24,8 +25,8 @@ const Login = () => {
 
   // Check if already logged in then redirect to Payment Page
   useEffect(() => {
-    const authenticated = localStorage.getItem('auth');
-    if (authenticated && JSON.parse(authenticated).hash) {
+    const authenticated = getValueFromLocalStorage('auth');
+    if (authenticated && authenticated.hash) {
       navigate('/payment');
     }
   }, []);
@@ -47,7 +48,7 @@ const Login = () => {
     // Get response code and redirect to payment page after successful login else set Error Message
     setstatus(res);
     if (res && res.code === 200) {
-      localStorage.setItem('auth', JSON.stringify(res.data));
+      setValueInLocalStorage('auth', res.data);
       navigate('/payment');
     }
     setdisabled(false);
@@ -131,7 +132,7 @@ const Login = () => {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link onClick={()=> navigate('/signup')} style={{cursor: 'pointer'}} variant="body2">
+                  <Link onClick={() => navigate('/signup')} style={{ cursor: 'pointer' }} variant="body2">
                     Don't have an account? Sign Up
                   </Link>
                 </Grid>

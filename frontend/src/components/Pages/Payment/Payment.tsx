@@ -14,62 +14,44 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import Container from '@mui/material/Container';
 import PaymentModal from './PaymentModal';
 import { useNavigate } from 'react-router-dom';
-
-const tiers = [
-  {
-    title: 'Basic',
-    price: '10',
-    description: [
-      'News Update every 1 hour',
-      'Headlines update every 30 minutes',
-      '100 calls Daily limit',
-      'Help center access',
-      'Email support',
-    ]
-  },
-  {
-    title: 'Pro',
-    subheader: 'Most popular',
-    price: '15',
-    description: [
-      'News Update every 15 minutes',
-      'Headlines update every 10 minutes',
-      '1000 calls Daily limit',
-      'Help center access',
-      'Priority email support',
-    ]
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-      'News Update every 1 minute',
-      'Headlines update every 1 minute',
-      'No limit hits',
-      'Help center access',
-      'Phone & email support',
-    ]
-  },
-];
+import { checkArrayLength, getValueFromLocalStorage, removeValueFromLocalStorage } from '../../../helpers/common-functions';
+import { getPackages } from '../../../actions/payment';
 
 const defaultTheme = createTheme();
 
 const Payment = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [packages, setpackages] = useState([]);
   const [chosenPackage, setchosenPackage] = useState({});
   const handleClose = () => setOpen(false);
 
+  //Get Packages on load
   useEffect(() => {
-    const subscribedCustomer = localStorage.getItem('auth');
-    if (subscribedCustomer && JSON.parse(subscribedCustomer).subscribed) {
+    //Check if user is already subscribed then redirect to news page
+    const subscribedCustomer = getValueFromLocalStorage('auth');
+    if (subscribedCustomer && checkArrayLength(subscribedCustomer.user_details) && subscribedCustomer.user_details[0].is_subscribed) {
       navigate('/news');
+    }
+    else {
+      const fetchData = async () => {
+        const res: any = await getPackages(subscribedCustomer)
+          .then((res) => res)
+        if (res.code == 401) {
+          removeValueFromLocalStorage('auth');
+          navigate('/login');
+        }
+        else {
+          setpackages(res.data);
+        }
+      }
+      fetchData();
     }
   }, []);
 
   //Set Chosen Package detail in variable for Payment Modal and open Payment Modal
   const handleOnClick = (el: any) => {
-    setchosenPackage(tiers[el.target.id]);
+    setchosenPackage(packages[el.target.id]);
     setOpen(true);
   }
 
@@ -97,21 +79,21 @@ const Payment = () => {
         {/* End hero unit */}
         <Container maxWidth="md" component="main">
           <Grid container spacing={5} alignItems="flex-end">
-            {tiers.map((tier, index: number) => (
+            {packages.map((tier: any, index: number) => (
               // Enterprise card is full width at sm breakpoint
               <Grid
                 item
-                key={tier.title}
+                key={tier.package_name}
                 xs={12}
-                sm={tier.title === 'Enterprise' ? 12 : 6}
+                sm={tier.package_name === 'Enterprise' ? 12 : 6}
                 md={4}
               >
                 <Card>
                   <CardHeader
-                    title={tier.title}
-                    subheader={tier.subheader}
+                    title={tier.package_name}
+                    subheader={tier.package_name == 'Pro' ? 'Most Popular' : ''}
                     titleTypographyProps={{ align: 'center' }}
-                    action={tier.title === 'Pro' ? <StarIcon /> : null}
+                    action={tier.package_name === 'Pro' ? <StarIcon /> : null}
                     subheaderTypographyProps={{
                       align: 'center',
                     }}
@@ -132,14 +114,14 @@ const Payment = () => {
                       }}
                     >
                       <Typography component="h2" variant="h3" color="text.primary">
-                        ${tier.price}
+                        ${tier.amount}
                       </Typography>
                       <Typography variant="h6" color="text.secondary">
                         /mo
                       </Typography>
                     </Box>
                     <ul>
-                      {tier.description.map((line) => (
+                      {tier.package_desc.map((line: any) => (
                         <Typography
                           component="li"
                           variant="subtitle1"

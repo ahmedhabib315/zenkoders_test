@@ -21,3 +21,15 @@
 #root > div > div > main > div > div.news > div:nth-child(n) > div.MuiCardMedia-root.css-1999db7-MuiCardMedia-root{
   height: 250px
 }
+
+body > div.MuiModal-root.css-79ws1d-MuiModal-root > div.MuiBox-root.css-1wnsr1i > div > div > div > form > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation0.MuiAlert-root.MuiAlert-filledError.MuiAlert-filled.css-1c3trtb-MuiPaper-root-MuiAlert-root{
+  margin-bottom: 20px;
+}
+
+body > div.MuiModal-root.css-79ws1d-MuiModal-root > div.MuiBox-root.css-1wnsr1i > div > div > div > form > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation0.MuiAlert-root.MuiAlert-filledSuccess.MuiAlert-filled.css-camg44-MuiPaper-root-MuiAlert-root{
+  margin-bottom: 20px;
+}
+
+body > div.MuiModal-root.css-79ws1d-MuiModal-root > div.MuiBox-root.css-1wnsr1i > div > p{
+  margin: 10px
+}

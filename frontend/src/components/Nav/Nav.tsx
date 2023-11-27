@@ -4,8 +4,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled, alpha } from '@mui/material/styles';
 import Link from '@mui/material/Link';
-import { sections } from '../../constants/constants';
 import { useNavigate } from 'react-router-dom';
+import { sections } from '../../helpers/constants';
+import '../../assets/style/nav.css'
+import { logout } from '../../actions/auth';
+import { clearLocalStorage, getValueFromLocalStorage } from '../../helpers/common-functions';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -63,14 +66,21 @@ const Nav = () => {
   const handleOnClick = () => {
     if (searchValue) {
       navigate(`/news?q=${searchValue}`)
+      window.location.reload();
       setsearchValue('')
-      if (inputRef.current) {
-        let element: any = inputRef.current;
-        if (element.querySelector('input')) {
-          element.querySelector('input').value = '';
-        }
-      }
     }
+  }
+
+  //Logout User and remove all details from local Storage
+  const handleLogout = () => {
+    const subscribedCustomer = getValueFromLocalStorage('auth');
+    const fetchData = async () => {
+      const res: any = await logout(subscribedCustomer)
+        .then((res) => res)
+      clearLocalStorage()
+      navigate(`/login`)
+    }
+    fetchData()
   }
 
 
@@ -101,6 +111,9 @@ const Nav = () => {
         <Button disabled={searchValue ? false : true} variant="outlined" size="small" onClick={handleOnClick}>
           Search
         </Button>
+        <Button variant="outlined" size="small" onClick={handleLogout}>
+          Logout
+        </Button>
       </Toolbar>
       <Toolbar
         component="nav"
@@ -114,7 +127,7 @@ const Nav = () => {
             key={section}
             style={{ cursor: 'pointer' }}
             variant="body2"
-            onClick={() => navigate(`/news/${section != 'Home' ? section.toLowerCase() : ''}`)}
+            href={`/news/${section != 'Home' ? section.toLowerCase() : ''}`}
             sx={{ p: 1, flexShrink: 0 }}
           >
             {section}

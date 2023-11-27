@@ -1,10 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom'
+import { getValueFromLocalStorage } from '../../helpers/common-functions'
 
 const PrivateRoutes = () => {
-  const authenticated = localStorage.getItem('auth')
+  const authenticated = getValueFromLocalStorage('auth')
 
   // Continue to Component only if authorized else redirect to login page
-  if (authenticated && JSON.parse(authenticated).hash) {
+  if (authenticated && authenticated.hash) {
     return <>{<Outlet />}</>
   }
   return <Navigate to="/login" />

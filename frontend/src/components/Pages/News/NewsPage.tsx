@@ -5,15 +5,18 @@ import { Container, CssBaseline, Grid, createTheme } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Nav from '../../Nav/Nav';
+import { checkArrayLength, getValueFromLocalStorage } from '../../../helpers/common-functions';
 
 const defaultTheme = createTheme();
 
 const NewsPage = () => {
   const navigate = useNavigate();
+
+  //Check if user is subscribed then let them see the news page else redirect to payment page for subscription
   useEffect(() => {
-    const paid_customer = localStorage.getItem('auth');
-    if (paid_customer && !JSON.parse(paid_customer).subscribed) {
-      // navigate('/payment');
+    const subscribedCustomer = getValueFromLocalStorage('auth');
+    if (subscribedCustomer && checkArrayLength(subscribedCustomer.user_details) && !subscribedCustomer.user_details[0].is_subscribed) {
+      navigate('/payment');
     }
   }, []);
 

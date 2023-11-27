@@ -9,16 +9,16 @@ import { loadStripe } from '@stripe/stripe-js';
 import Paper from '@mui/material/Paper';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './Checkoutform';
-import { paymentModalStyle } from '../../../constants/constants';
-import { PaymentModalProps } from '../../../constants/interfaces';
+import { PaymentModalProps } from '../../../helpers/interfaces';
+import { paymentModalStyle } from '../../../helpers/constants';
 
 const PaymentModal = (props: PaymentModalProps) => {
   const formData = props.package;
   const stripePromise = loadStripe(`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`);
-  
+
   const options: any = {
     mode: 'payment',
-    amount: parseFloat(formData.price),
+    amount: parseFloat(formData.amount),
     currency: 'usd'
   };
 

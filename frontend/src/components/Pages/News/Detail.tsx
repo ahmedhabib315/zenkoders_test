@@ -9,21 +9,34 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { newsDetailStyle } from '../../../constants/constants';
-import { TransitionModalProps } from '../../../constants/interfaces';
+import { newsDetailStyle } from '../../../helpers/constants';
+import { TransitionModalProps } from '../../../helpers/interfaces';
+import { getSummary } from '../../../actions/news';
+import { getValueFromLocalStorage } from '../../../helpers/common-functions';
 
 const TransitionsModal = (props: TransitionModalProps) => {
   const news = props.currentNews;
   const [summary, setsummary] = useState({ error: '', description: '' });
   const [disabled, setdisabled] = useState(false);
 
+  //Summarize the News for the user
   const summarize = async () => {
     setdisabled(true);
-    setsummary({ description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur', error: '' })
-    setdisabled(false);
 
+    const subscribedCustomer = getValueFromLocalStorage('auth');
+    const res: any = await getSummary(subscribedCustomer, news.description)
+      .then((res) => res)
+    if (res.code == 401) {
+      setsummary({ description: '', error: 'Some Error Occurred. Please Try Again Later' })
+    }
+    else {
+      setsummary({ description: res.data.content, error: '' })
+
+    }
+    setdisabled(false);
   }
 
+  //Close Detail Modal and empty summary as well
   const setOnclose = () => {
     props.handleClose();
     setsummary({ error: '', description: '' });
@@ -58,10 +71,10 @@ const TransitionsModal = (props: TransitionModalProps) => {
                   {news.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {news.description}
+                  {news.description ? news.description : ''}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {news.content}
+                  {news.content.split('[+')[0]}
                 </Typography>
               </CardContent>
               <CardActions>
@@ -69,13 +82,13 @@ const TransitionsModal = (props: TransitionModalProps) => {
                 <Button size="small" disabled={disabled} onClick={summarize}>Summarize</Button>
               </CardActions>
 
-              {summary.error && <Typography variant="body2" color="text.secondary">
+              {summary.error && <Typography variant="body2" color="red">
                 {summary.error}
               </Typography>}
               {summary.description &&
                 <Fade in={summary.description ? true : false}>
                   <Typography variant="body2" color="text.secondary">
-                    {summary.description}
+                    <strong>Summary:</strong> {summary.description}
                   </Typography>
                 </Fade>
               }

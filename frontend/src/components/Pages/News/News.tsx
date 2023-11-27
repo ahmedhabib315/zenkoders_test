@@ -8,9 +8,12 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { formatDistance } from 'date-fns';
 import '../../../assets/style/pages.css';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { checkArrayLength, getValueFromLocalStorage, removeValueFromLocalStorage, setValueInLocalStorage } from '../../../helpers/common-functions';
+import { getNews } from '../../../actions/news';
 
 const News = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [newsData, setnewsData] = useState([]);
@@ -28,7 +31,9 @@ const News = () => {
 
   //Get news data on load
   useEffect(() => {
-    const data: string | null = localStorage.getItem('news');
+    const subscribedCustomer = getValueFromLocalStorage('auth');
+
+    const data = getValueFromLocalStorage('news');
 
     // Parse the query parameters from the location.search string
     const queryParams = new URLSearchParams(location.search);
@@ -36,15 +41,31 @@ const News = () => {
     // Get the value of a specific query parameter (e.g., 'query')
     const queryValue = queryParams.get('q');
 
-    if (abc['*']) {
-      console.log(':::::::abc::::;', abc);
+    const params = {
+      q: queryValue || '',
+      category: abc['*'] || ''
     }
-    if (queryValue) {
-      console.log(':::::::queryValue::;', queryValue);
+    
+    const fetchData = async () => {
+      const res: any = await getNews(subscribedCustomer, params)
+        .then((res) => res)
+      if (res.code == 401) {
+        removeValueFromLocalStorage('auth');
+        navigate('/login');
+      }
+      else {
+        if (res.code == 200) {
+          setnewsData(res.data)
+          setValueInLocalStorage('news', res.data)
+        }
+        else {
+          if (data) {
+            setnewsData(data)
+          }
+        }
+      }
     }
-    if (data && JSON.parse(data).status === 'ok') {
-      setnewsData(JSON.parse(data).articles)
-    }
+    fetchData();
   }, []);
 
   return (
@@ -52,6 +73,7 @@ const News = () => {
       <div className='news'>
         {
           newsData.map((el: any, index: number) => {
+            if(el.description){
             return (
               <Card sx={{ maxWidth: 345 }}>
                 <CardMedia
@@ -78,6 +100,7 @@ const News = () => {
                 </CardActions>
               </Card>
             )
+          }
           })
         }
       </div>

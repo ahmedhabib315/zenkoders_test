@@ -24,3 +24,12 @@ export interface PaymentModalProps {
   handleClose: any;
   package: any;
 }
+
+export interface UserDetails {
+  access_token: string
+}
+
+export interface NewsPayload {
+  category?: string
+  q?: string
+}
