@@ -16,8 +16,6 @@ $ npm run db:seed #(run only first time)
 $ npm run start #Start the server
 ```
 
-NOTE: Please Change exampleenv file to .env when setting up project
-
 ## Setup Frontend
 
 ```bash
