@@ -68,6 +68,7 @@ export class PaymentsService {
             id: user_details.id,
           },
           data: {
+            is_subscribed: true,
             card_id: addCard.id,
             exp_month: addCard.exp_month + '',
             exp_year: addCard.exp_year + '',

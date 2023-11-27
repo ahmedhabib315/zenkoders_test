@@ -28,6 +28,7 @@ model UserDetails {
   id              Int      @id @default(autoincrement())
   user            Users    @relation(fields: [user_id], references: [id])
   user_id         Int
+  is_subscribed   Boolean  @default(false)
   object          String?
   brand           String?
   last4           String?
@@ -67,7 +68,7 @@ model Payments {
 model Packages {
   id           Int      @id @default(autoincrement())
   package_name String
-  package_desc String   @default("")
+  package_desc String[]
   product_id   String   @unique()
   price_id     String   @unique()
   amount       Int

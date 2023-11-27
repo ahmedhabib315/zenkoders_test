@@ -11,7 +11,7 @@ import { PaymentsService } from './payments.service';
 import { AtGuard } from '@libs/gurads';
 import { GetCurrentUserId } from '@libs/decorators';
 import { Token } from './dto/payments.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PrismaClientExceptionFilter } from '@libs/prisma-client-exception/prisma-client-exception.filter';
 import { HttpExceptionFilter } from '@libs/exceptions-handler/http-exception.filter';
 
@@ -24,6 +24,7 @@ export class PaymentsController {
   @Post('subscription')
   @UseGuards(AtGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('JWT-auth')
   async subscription(@GetCurrentUserId() userId: number, @Body() data: Token) {
     return await this.paymentsService.subscription(userId, data);
   }

@@ -5,14 +5,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class AtGuard extends AuthGuard('jwt') implements CanActivate {
   constructor(
-    private reflector: Reflector,
     private readonly jwtServ: JwtService,
     private prisma: PrismaService,
   ) {
@@ -36,6 +34,7 @@ export class AtGuard extends AuthGuard('jwt') implements CanActivate {
       });
 
       const user = await this.getUser(payload.sub, payload.hash);
+
       if (user) {
         return super.canActivate(context);
       } else {
@@ -46,7 +45,7 @@ export class AtGuard extends AuthGuard('jwt') implements CanActivate {
     }
   }
 
-  async getUser(id: number, hash) {
+  async getUser(id: number, hash: string) {
     return await this.prisma.users.findFirst({
       where: {
         AND: [
